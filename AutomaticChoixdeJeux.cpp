@@ -5,55 +5,58 @@ using namespace std;
 #include <filesystem>
 #include <vector>
 #include "unistd.h"
-string MousePath = "C:\\Users\\dorss\\OneDrive\\Bureau\\Jeux\\Souris_Choose.txt";
-int choix;                // Choix du jeu à lancer
-bool LOL = false;         // Savoir si LoL est lancé ou non
-bool Needchange = false;  // Doit-on changer la valeur du bloc-note
-vector<string> filePaths; // Tableau pour stocker les chemins des fichiers
 
+string MousePath = "C:\\Users\\dorss\\OneDrive\\Bureau\\Jeux\\Souris_Choose.txt";
+int choix;                // Choice of the game to launch
+bool LOL = false;         // Check if LoL (League of Legends) is running or not
+bool Needchange = false;  // Should we change the value in the Notepad file?
+vector<string> filePaths; // Array to store file paths
+
+// Function to change the number in the Notepad file
 void ChangeNumber(string &ChiffreInBlocNote)
 {
-    // Si il y a besoin de changer le chiffre
+    // If there is a need to change the number
     if (Needchange)
     {
         ofstream myfile("C:\\Users\\dorss\\OneDrive\\Bureau\\Jeux\\Souris_Choose.txt");
-        // Fichier à ouvrir
+        // Open the file
         if (myfile.is_open() && ChiffreInBlocNote == "1")
         {
-            myfile << "2"; // Changer par 2
+            myfile << "2"; // Change to 2
             myfile.close();
         }
         if (myfile.is_open() && ChiffreInBlocNote == "2")
         {
-            myfile << "1"; // Changer par 1
+            myfile << "1"; // Change to 1
             myfile.close();
         }
-        cout << "Changer les parametres de la souris";
+        cout << "Changing mouse settings";
         sleep(5);                                    // Wait to change settings
         system("taskkill /f /im OemDrv.exe 1>NULL"); // Shutdown Mouse's program
     }
 }
 
+// Function to check for changes in the Notepad file and act accordingly
 void CheckChanges()
 {
-    ifstream myfile(MousePath); // Fichier à ouvrir
-    string NotePadChoose;       // Variable contenant la valeur dans le bloc note
+    ifstream myfile(MousePath); // Open the file
+    string NotePadChoose;       // Variable containing the value in the Notepad file
     if (myfile.is_open())
     {
         while (getline(myfile, NotePadChoose))
         {
-            cout << "Dans le Notepad : " << NotePadChoose << '\n';
+            cout << "In the Notepad: " << NotePadChoose << '\n';
         }
         if (NotePadChoose == "2" && LOL == true)
         {
             system("start C:\\Users\\dorss\\OneDrive\\Bureau\\T21_Wired_Gaming_Mouse.lnk");
-            cout << "J'ouvre T21" << endl;
+            cout << "Opening T21" << endl;
             Needchange = true;
         }
         else if (NotePadChoose == "1" && LOL == false)
         {
             system("start C:\\Users\\dorss\\OneDrive\\Bureau\\T21_Wired_Gaming_Mouse.lnk");
-            cout << "J'ouvre T21" << endl;
+            cout << "Opening T21" << endl;
             Needchange = true;
         }
         myfile.close();
@@ -61,9 +64,10 @@ void CheckChanges()
     ChangeNumber(NotePadChoose);
 }
 
+// Function to enumerate files in a directory and store their paths in the vector
 void EnumerateFile()
 {
-    string path = "Jeux";
+    string path = "Games";
 
     for (const auto &entry : std::filesystem::directory_iterator(path))
     {
@@ -72,6 +76,7 @@ void EnumerateFile()
     }
 }
 
+// Function to enumerate available games and display them with indices
 void EnumerateGames()
 {
     string ListeJeux = R"(
@@ -83,31 +88,31 @@ void EnumerateGames()
   \/_____/   \/_/\/_/   \/_/  \/_/   \/_____/   \/_____/
 
 
-Quel jeux lancer :
+Which game to launch:
     0 - Quit League Of Legends
 )";
-    // Parcourir tous les fichiers
+    // Browse all the files
     for (int i = 0; i < filePaths.size(); i++)
     {
-        filePaths[i].erase(0, 5);                                                  // Se mettre à la première position pour supprimer "/Jeux"
-        filePaths[i].erase((filePaths[i].size() - 4), 4);                          // Supprimer ".lnk" à la fin du raccourci
-        ListeJeux += "    " + std::to_string(i + 1) + " - " + filePaths[i] + "\n"; // Intégrer dans ListeJeux tout les jeux
+        filePaths[i].erase(0, 6);                                                  // Move to the first position to remove "/Jeux"
+        filePaths[i].erase((filePaths[i].size() - 4), 4);                          // Remove ".lnk" at the end of the shortcut
+        ListeJeux += "    " + std::to_string(i + 1) + " - " + filePaths[i] + "\n"; // Add all the games to ListeJeux
     }
     cout << ListeJeux;
 }
 
 int main()
 {
-    EnumerateFile();  // Trouver les fichiers
-    EnumerateGames(); // Ecrire les jeux
+    EnumerateFile();  // Find files
+    EnumerateGames(); // List games
 
     while (true)
     {
-        cin >> choix; // Récupérer le chiffre
+        cin >> choix; // Get the number
 
         if (choix > filePaths.size())
         {
-            cout << "mauvaise entree, reessayer" << endl;
+            cout << "Invalid input, please try again" << endl;
             continue; // Restart the loop to get a valid input
         }
         else if (choix != 0)
@@ -126,7 +131,7 @@ int main()
         }
         else
         {
-            // Fermer les logiciels
+            // Close the software
             system("taskkill /f /im LeagueClient.exe 1>NULL");
             system("taskkill /f /im Overwolf.exe 1>NULL");
             LOL = false;
