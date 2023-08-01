@@ -6,7 +6,7 @@ using namespace std;
 #include <vector>
 #include "unistd.h"
 
-string MousePath = "C:\\Users\\dorss\\OneDrive\\Bureau\\Jeux\\Souris_Choose.txt";
+string MouseSettingPath = "C:\\Users\\dorss\\OneDrive\\Bureau\\Jeux\\Souris_Choose.txt";
 int choix;                // Choice of the game to launch
 bool LOL = false;         // Check if LoL (League of Legends) is running or not
 bool Needchange = false;  // Should we change the value in the Notepad file?
@@ -18,7 +18,7 @@ void ChangeNumber(string &ChiffreInBlocNote)
     // If there is a need to change the number
     if (Needchange)
     {
-        ofstream myfile("C:\\Users\\dorss\\OneDrive\\Bureau\\Jeux\\Souris_Choose.txt");
+        ofstream myfile(MouseSettingPath);
         // Open the file
         if (myfile.is_open() && ChiffreInBlocNote == "1")
         {
@@ -39,7 +39,7 @@ void ChangeNumber(string &ChiffreInBlocNote)
 // Function to check for changes in the Notepad file and act accordingly
 void CheckChanges()
 {
-    ifstream myfile(MousePath); // Open the file
+    ifstream myfile(MouseSettingPath); // Open the file
     string NotePadChoose;       // Variable containing the value in the Notepad file
     if (myfile.is_open())
     {
@@ -118,7 +118,7 @@ int main()
         else if (choix != 0)
         {
             choix--;
-            string pathToStart = "start Jeux/" + filePaths[choix] + ".lnk";
+            string pathToStart = "start Games/" + filePaths[choix] + ".lnk";
             system(pathToStart.c_str());
             LOL = false;
             if (filePaths[choix] == "League_of_Legends")
