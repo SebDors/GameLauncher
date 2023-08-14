@@ -40,7 +40,7 @@ void ChangeNumber(string &ChiffreInBlocNote)
 void CheckChanges()
 {
     ifstream myfile(MouseSettingPath); // Open the file
-    string NotePadChoose;       // Variable containing the value in the Notepad file
+    string NotePadChoose;              // Variable containing the value in the Notepad file
     if (myfile.is_open())
     {
         while (getline(myfile, NotePadChoose))
@@ -114,6 +114,13 @@ int main()
         {
             cout << "Invalid input, please try again" << endl;
             continue; // Restart the loop to get a valid input
+        }
+        else if (cin.fail()) // Error if the input isn't a number
+        {
+            cout << "Invalid input, please try again" << endl;
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
         }
         else if (choix != 0)
         {
